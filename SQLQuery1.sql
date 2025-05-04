@@ -110,21 +110,21 @@ FOREIGN KEY (lectureId)  REFERENCES lectures (id)
 
 -- DROP DATABASE Academy;
 
--- 1. Вывести все возможные пары строк преподавателей и групп
+-- 1. 
 SELECT t.name, t.surname, g.name AS group_name
 FROM teachers t, groups g;
 
--- 2. Вывести названия факультетов, фонд финансирования кафедр которых превышает фонд финансирования факультета
+-- 2. 
 SELECT [name] 
 FROM faculties 
 WHERE financing < (SELECT MAX(financing) FROM departments);
 
--- 3. Вывести фамилии кураторов групп и названия групп, которые они курируют.
+-- 3. 
 SELECT c.surname AS CuratorSurname, g.[name] AS GroupName 
 FROM curators c, groups g 
 WHERE c.id IN (SELECT curatorId FROM groupsCurators WHERE groupId = g.id);
 
---  4. Вывести имена и фамилии преподавателей, которые читают лекции у группы “P107”.
+--  4. 
 SELECT [name], surname 
 FROM teachers 
 WHERE id IN (
@@ -141,7 +141,7 @@ WHERE id IN (
     )
 );
 
--- 7. Вывести названия дисциплин, которые читает преподаватель “Samantha Adams”.
+-- 7. 
 SELECT [name] 
 FROM subjects 
 WHERE id IN (
@@ -154,7 +154,7 @@ WHERE id IN (
     )
 );
 
--- 8. Вывести названия групп, которые относятся к факультету “Computer Science”.
+-- 8. 
 SELECT g.name 
 FROM groups g 
 WHERE g.departmentId IN (
