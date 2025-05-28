@@ -108,7 +108,7 @@ FOREIGN KEY (lectureId)  REFERENCES lectures (id)
 
 --DROP DATABASE Academy;
 
--- Заполнение таблицы факультетов
+-- Filling in the faculty table
 INSERT INTO faculties (financing, name) VALUES
 (100000, 'Computer Science'),
 (80000, 'Engineering'),
@@ -116,7 +116,7 @@ INSERT INTO faculties (financing, name) VALUES
 (90000, 'Physics'),
 (75000, 'Biology');
 
--- Заполнение таблицы кафедр
+-- Filling out the table of departments
 INSERT INTO departments (financing, [name], facultyId) VALUES
 (50000, 'Software Development', 1),
 (60000, 'Data Science', 1),
@@ -129,7 +129,7 @@ INSERT INTO departments (financing, [name], facultyId) VALUES
 (30000, 'Genetics', 5),
 (25000, 'Ecology', 5);
 
--- Заполнение таблицы групп
+-- Filling out the group table
 INSERT INTO groups (name, year, departmentId) VALUES
 ('P107', 1, 1),
 ('P108', 2, 1),
@@ -142,7 +142,7 @@ INSERT INTO groups (name, year, departmentId) VALUES
 ('M301', 1, 5),
 ('M302', 5, 6);
 
--- Заполнение таблицы кураторов
+-- Filling in the table of curators
 INSERT INTO curators (name, surname) VALUES
 ('John', 'Smith'),
 ('Emily', 'Johnson'),
@@ -150,7 +150,7 @@ INSERT INTO curators (name, surname) VALUES
 ('Sarah', 'Brown'),
 ('David', 'Jones');
 
--- Заполнение таблицы связи групп и кураторов
+-- Filling in the table of connections between groups and curators
 INSERT INTO groupsCurators (curatorId, groupId) VALUES
 (1, 1),
 (2, 2),
@@ -163,7 +163,7 @@ INSERT INTO groupsCurators (curatorId, groupId) VALUES
 (4, 9),
 (5, 10);
 
--- Заполнение таблицы дисциплин
+-- Filling out the table of disciplines
 INSERT INTO subjects (name) VALUES
 ('Database Theory'),
 ('Programming Fundamentals'),
@@ -176,7 +176,7 @@ INSERT INTO subjects (name) VALUES
 ('Genetics'),
 ('Ecology');
 
--- Заполнение таблицы преподавателей
+-- Filling out the teacher table
 INSERT INTO teachers (name, salary, surname) VALUES
 ('Samantha', 5000, 'Adams'),
 ('Robert', 4500, 'Wilson'),
@@ -184,7 +184,7 @@ INSERT INTO teachers (name, salary, surname) VALUES
 ('William', 5200, 'Anderson'),
 ('Elizabeth', 4700, 'Thomas');
 
--- Заполнение таблицы лекций
+-- Filling in the lecture table
 INSERT INTO lectures (lectureRoom, subjectId, teacherId) VALUES
 ('B103', 1, 1),
 ('A205', 2, 2),
@@ -197,7 +197,7 @@ INSERT INTO lectures (lectureRoom, subjectId, teacherId) VALUES
 ('C301', 9, 4),
 ('D102', 10, 5);
 
--- Заполнение таблицы связи групп и лекций
+-- Filling in the table of connections between groups and lectures
 INSERT INTO groupsLectures (groupId, lectureId) VALUES
 (1, 1),
 (2, 2),
@@ -215,11 +215,11 @@ INSERT INTO groupsLectures (groupId, lectureId) VALUES
 (4, 9),
 (5, 10);
 
--- 1. Вывести все возможные пары строк преподавателей и групп
+-- 1. Output all possible pairs of teacher and group strings
 SELECT t.Name, t.Surname, g.Name AS GroupName
 FROM Teachers t, Groups g;
 
--- 2. Вывести названия факультетов, фонд финансирования кафедр которых превышает фонд финансирования факультета
+-- 2. Display the names of faculties whose department funding fund exceeds the faculty funding fund
 SELECT f.Name
 FROM faculties f
 WHERE f.financing < (
@@ -227,13 +227,13 @@ SELECT SUM(d.financing)
 FROM departments d
 WHERE d.facultyId = f.id);
 
--- 3. Вывести фамилии кураторов групп и названия групп, которые они курируют
+-- 3. Display the names of group curators and the names of the groups they supervise
 SELECT c.Surname, g.Name AS GroupName
 FROM Curators c
 JOIN GroupsCurators gc ON c.Id = gc.CuratorId
 JOIN Groups g ON g.Id = gc.GroupId;
 
--- 4. Вывести имена и фамилии преподавателей, которые читают лекции у группы "P107"
+-- 4. Display the names and surnames of the teachers who give lectures to group "P107"
 SELECT DISTINCT t.Name, t.Surname
 FROM Teachers t
 JOIN Lectures l ON t.Id = l.TeacherId
@@ -241,7 +241,7 @@ JOIN GroupsLectures gl ON l.Id = gl.LectureId
 JOIN Groups g ON g.Id = gl.GroupId
 WHERE g.Name = 'P107';
 
--- 5. Вывести фамилии преподавателей и названия факультетов на которых они читают лекции
+-- 5. Display the names of teachers and the names of the departments where they lecture
 SELECT DISTINCT t.Surname, f.Name AS FacultyName
 FROM Teachers t
 JOIN Lectures l ON t.Id = l.TeacherId
@@ -250,19 +250,19 @@ JOIN Groups g ON g.Id = gl.GroupId
 JOIN Departments d ON d.Id = g.DepartmentId
 JOIN Faculties f ON f.Id = d.FacultyId;
 
--- 6. Вывести названия кафедр и названия групп, которые к ним относятся
+-- 6. Display the names of departments and the names of the groups that belong to them
 SELECT d.Name AS DepartmentName, g.Name AS GroupName
 FROM Departments d
 JOIN Groups g ON d.Id = g.DepartmentId;
 
--- 7. Вывести названия дисциплин, которые читает преподаватель "Samantha Adams"
+-- 7. Display the names of the courses taught by the teacher "Samantha Adams"
 SELECT s.Name AS SubjectName
 FROM Subjects s
 JOIN Lectures l ON s.Id = l.SubjectId
 JOIN Teachers t ON t.Id = l.TeacherId
 WHERE t.Name = 'Samantha' AND t.Surname = 'Adams';
 
--- 8. Вывести названия кафедр, на которых читается дисциплина "Database Theory"
+-- 8. Display the names of departments where the course "Database Theory" is taught
 SELECT DISTINCT d.Name AS DepartmentName
 FROM Departments d
 JOIN Groups g ON d.Id = g.DepartmentId
@@ -271,22 +271,22 @@ JOIN Lectures l ON l.Id = gl.LectureId
 JOIN Subjects s ON s.Id = l.SubjectId
 WHERE s.Name = 'Database Theory';
 
--- 9. Вывести названия групп, которые относятся к факультету "Computer Science"
+-- 9. Display the names of groups that belong to the faculty "Computer Science"
 SELECT g.Name AS GroupName
 FROM Groups g
 JOIN Departments d ON d.Id = g.DepartmentId
 JOIN Faculties f ON f.Id = d.FacultyId
 WHERE f.Name = 'Computer Science';
 
--- 10. Вывести названия групп 5-го курса, а также название факультетов, к которым они относятся
+-- 10. Display the names of the 5th year groups, as well as the names of the faculties to which they belong
 SELECT g.Name AS GroupName, f.Name AS FacultyName
 FROM Groups g
 JOIN Departments d ON d.Id = g.DepartmentId
 JOIN Faculties f ON f.Id = d.FacultyId
 WHERE g.Year = 5;
 
--- 11. Вывести полные имена преподавателей и лекции, которые они читают (названия дисциплин и групп), 
--- причем отобрать только те лекции, которые читаются в аудитории "B103"
+-- 11. Display full names of teachers and lectures they give (names of disciplines and groups), 
+-- and select only those lectures that are given in room "B103"
 SELECT t.Name + ' ' + t.Surname AS TeacherFullName, 
        s.Name AS SubjectName, 
        g.Name AS GroupName
